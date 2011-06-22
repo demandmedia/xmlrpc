@@ -191,7 +191,7 @@
     
     id object = nil;
     
-    while (object = [enumerator nextObject]) {
+    while ((object = [enumerator nextObject])) {
         [buffer appendString: [self encodeObject: object]];
     }
     
@@ -208,7 +208,7 @@
     
     NSString *key = nil;
     
-    while (key = [enumerator nextObject]) {
+    while ((key = [enumerator nextObject])) {
         [buffer appendString: @"<member>"];
         [buffer appendFormat: @"<name>%@</name>", [self encodeString: key omitTag: YES]];
         [buffer appendString: [self encodeObject: [dictionary objectForKey: key]]];

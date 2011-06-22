@@ -30,7 +30,7 @@
         return nil;
     }
     
-    if (self = [self init]) {
+    if ((self = [self init])) {
         myParser = [[NSXMLParser alloc] initWithData: data];
         myParserDelegate = nil;
         isFault = NO;
