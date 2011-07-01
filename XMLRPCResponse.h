@@ -30,7 +30,7 @@
     BOOL isFault;
 }
 
-- (id)initWithData: (NSData *)data;
+- (id)initWithData: (NSData *)data isCompressed:(BOOL)isCompressed;
 
 #pragma mark -
 
@@ -47,5 +47,6 @@
 #pragma mark -
 
 - (NSString *)body;
++ (NSData *)uncompressZippedData:(NSData*)compressedData;
 
 @end

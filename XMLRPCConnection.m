@@ -51,6 +51,7 @@
 @implementation XMLRPCConnection
 
 - (id)initWithXMLRPCRequest: (XMLRPCRequest *)request delegate: (id<XMLRPCConnectionDelegate>)delegate manager: (XMLRPCConnectionManager *)manager {
+	NSAssert(NO, @"fail! we've hacked this library to ask for compressed data, but we only decode the data on sync calls");
     self = [super init];
     if (self) {
         myManager = [manager retain];
@@ -79,10 +80,13 @@
 #pragma mark -
 
 + (XMLRPCResponse *)sendSynchronousXMLRPCRequest: (XMLRPCRequest *)request error: (NSError **)error {
-    NSData *data = [[[NSURLConnection sendSynchronousRequest: [request request] returningResponse: nil error: error] retain] autorelease];
+    NSHTTPURLResponse *urlres;
+    NSData *data = [[[NSURLConnection sendSynchronousRequest: [request request] returningResponse: &urlres error: error] retain] autorelease];
     
     if (data) {
-        return [[[XMLRPCResponse alloc] initWithData: data] autorelease];
+		NSString *encoding = [[urlres allHeaderFields] objectForKey:@"Content-Encoding"];
+        BOOL isCompressed = encoding && [encoding rangeOfString:@"gzip"].location != NSNotFound;
+        return [[[XMLRPCResponse alloc] initWithData: data isCompressed: isCompressed] autorelease];
     }
     
     return nil;
@@ -171,7 +175,7 @@
 
 - (void)connectionDidFinishLoading: (NSURLConnection *)connection {
     if (myData && ([myData length] > 0)) {
-        XMLRPCResponse *response = [[[XMLRPCResponse alloc] initWithData: myData] autorelease];
+        XMLRPCResponse *response = [[[XMLRPCResponse alloc] initWithData: myData isCompressed:NO] autorelease];
         XMLRPCRequest *request = [[myRequest retain] autorelease];
         
         [myDelegate request: request didReceiveResponse: response];

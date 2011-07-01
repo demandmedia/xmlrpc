@@ -124,6 +124,14 @@
         [myRequest setValue: [contentLength stringValue] forHTTPHeaderField: @"Content-Length"];
     }
     
+    if (![myRequest valueForHTTPHeaderField: @"Accept-Encoding"])	{
+		[myRequest addValue: @"gzip, deflate" forHTTPHeaderField: @"Accept-Encoding"];
+	}
+	else {
+		[myRequest setValue: @"gzip, deflate" forHTTPHeaderField: @"Accept-Encoding"];
+	}	
+
+    
     [myRequest setHTTPBody: content];
     
     return (NSURLRequest *)myRequest;
