@@ -65,4 +65,7 @@
 
 - (NSURLRequest *)request;
 
+- (void)setHeader:(NSString*)header withValue:(NSString *)value;
+
+
 @end

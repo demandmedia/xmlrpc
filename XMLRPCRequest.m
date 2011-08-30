@@ -100,6 +100,14 @@
     return [myXMLEncoder encode];
 }
 
+- (void)setHeader:(NSString*)header withValue:(NSString *)value {
+    if (![myRequest valueForHTTPHeaderField:header]) {
+        [myRequest addValue: value forHTTPHeaderField: header];
+    } else {
+        [myRequest setValue: value forHTTPHeaderField: header];
+    }
+}
+
 #pragma mark -
 
 - (NSURLRequest *)request {
